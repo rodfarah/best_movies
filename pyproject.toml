@@ -1,0 +1,59 @@
+[tool.poetry]
+name = "best-movies"
+version = "0.1.0"
+description = "Code challenge for a job position at BISO"
+authors = ["Rodrigo Farah <digofarah@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^5.2"
+psycopg2-binary = "^2.9.10"
+python-dotenv = "^1.1.0"
+python-decouple = "^3.8"
+djangorestframework = "^3.16.0"
+drf-spectacular = "^0.28.0"
+requests = "^2.32.3"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest-django = "^4.11.1"
+ruff = "^0.11.4"
+mypy = "^1.15.0"
+isort = "^6.0.1"
+black = "^25.1.0"
+
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "Q", "I"]
+ignore = ["E203"]
+extend-select = ["C4", "SIM", "TCH"]
+
+[tool.mypy]
+plugins = [
+    "mypy_django_plugin.main"
+]
+python_version = 3.10
+ignore_missing_imports = true
+strict = true
+
+[mypy.plugins.django-stubs]
+django_settings_module = "project.settings"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

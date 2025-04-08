@@ -1,0 +1,43 @@
+services:
+  djangoapp:
+    container_name: django_movie_app
+    build: 
+      context: .
+    ports:
+      - 8000:8000
+    volumes:
+      - ./src:/app/src
+      - ./docker-scripts:/app/docker-scripts
+    user: "django_user"
+    environment:
+      - DJANGO_SETTINGS_MODULE=project.settings
+      - PYTHONPATH=/app/src
+      - APP_HOME=/app
+    env_file:
+      - ./.env
+    depends_on:
+      - psql
+    working_dir: /app/src
+    command: ["/bin/sh", "/app/docker-scripts/commands.sh"]
+
+  psql:
+    container_name: psql_movies
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
